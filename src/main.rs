@@ -50,9 +50,14 @@ fn main() {
     // ランダムな値を生成
     let mut t: Vec<usize> = vec![0; dd];
     let mut random_generator = rand::thread_rng();
+    #[cfg(feature = "seed")]
+    {
+        seed = 2023;
+    }
+
     for i in 0..dd {
-        let random_value = random_generator.gen_range(1..=ALPHABET); // gen_range(1, 12)の場合は1-12
-        // let random_value = random_generator.gen_range(1, ALPHABET+1); // gen_range(1, 12)の場合は1-12
+        // let random_value = random_generator.gen_range(1..=ALPHABET); // gen_range(1, 12)の場合は1-12
+        let random_value = random_generator.gen_range(1, ALPHABET+1); // gen_range(1, 12)の場合は1-12
         t[i] = random_value;
     }
 
@@ -71,18 +76,19 @@ fn main() {
     //     // let random_value = random_generator.gen_range(1, ALPHABET+1);
     //     dq[i][1] = random_value;
     // }
-
     let mut best_ans: isize = 0;
-    let mut iterate_num: isize = 0;
+    // let mut iterate_num: isize = 0;
     while get_time() < 1.98 {
-        iterate_num += 1;
+        // iterate_num += 1;
         let mut ans: isize = 0;
         let mut last: [usize; ALPHABET] = Default::default();
+        let d: usize = random_generator.gen_range(1, dd+1)-1;
+        let q: usize = random_generator.gen_range(1, ALPHABET+1);
         
-        let old_q = t[random_generator.gen_range(1..=dd)-1];
-        // let old_q = t[random_generator.gen_range(1, dd+1)-1];
-        t[random_generator.gen_range(1..=dd)-1] = random_generator.gen_range(1..=ALPHABET);
-        // t[random_generator.gen_range(1, dd+1)-1] = random_generator.gen_range(1, ALPHABET+1);
+        // let old_q = t[random_generator.gen_range(1..=dd)-1];
+        let old_q = t[d];
+        // t[random_generator.gen_range(1..=dd)-1] = random_generator.gen_range(1..=ALPHABET);
+        t[d] = q;
 
         for day in 0..dd {
             
@@ -102,15 +108,16 @@ fn main() {
             best_ans = ans
         }
         else {
-            t[random_generator.gen_range(1..=dd)-1] = old_q;
-            // t[random_generator.gen_range(1, dd+1)-1] = old_q;
+            // t[random_generator.gen_range(1..=dd)-1] = old_q;
+            t[d] = old_q;
         }
 
         // println!("{:?}", ans);
+        // println!("{}", best_ans);
     }
     for t_value in t {
         println!("{}", t_value);
     }
     // println!("{}", best_ans);
-    println!("{}", iterate_num)
+    // println!("{}", iterate_num)
 }
